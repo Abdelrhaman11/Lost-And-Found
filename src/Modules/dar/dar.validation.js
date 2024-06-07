@@ -8,8 +8,8 @@ export const loginDarSchema=joi.object({
 
 }).required()
 
-export const updateLocationSchema=joi.object({
-    postId:joi.string().custom(isValidObjectId).required(),
-    // location:joi.string().valid("Dar Alamal", "Dar ALHayat", "Wydad", "Nova Vita Rehabilitation Center" , "Dar Lamset Hanan El Shrouk").required()
+// export const updateLocationSchema=joi.object({
+//     postId:joi.string().custom(isValidObjectId).required(),
+//     // location:joi.string().valid("Dar Alamal", "Dar ALHayat", "Wydad", "Nova Vita Rehabilitation Center" , "Dar Lamset Hanan El Shrouk").required()
 
-}).required()
+// }).required()

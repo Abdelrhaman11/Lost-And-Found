@@ -8,6 +8,9 @@ const passwordRegex=  /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
 export const signupSchema =Joi.object({
     name: Joi.string().min(3).max(20).regex(nameRegex).required(),
     nId:Joi.number().required(),
+    gender:Joi.string(),
+    phone:Joi.string(),
+    Location:Joi.string(),
     email: Joi.string().email().regex(emailRegex).required(),
     password: Joi.string().min(8).max(16).regex(passwordRegex).required(),
     confirmPassword:Joi.string().valid(Joi.ref('password')).required(),

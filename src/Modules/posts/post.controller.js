@@ -81,22 +81,37 @@ export const similarity = asyncHandler(async (req, res, next) => {
 
 // get all Posts
 export const allPosts = asyncHandler(async (req, res, next) => {
-  const allPosts = await postModel.find();
-  const postsWithImages = await Promise.all(
-    allPosts.map(async (post) => {
-      const image = await imageModel.findById(post.imageId);
-      const user = await userModel
-        .findById(post.createdBy)
-        .select("name profileImage status");
-      return { ...post.toObject(), image, user };
-    })
-  );
-  return res.json({ success: true, results: postsWithImages });
+  const allPosts = await postModel.find().populate([{
+    path:"createdBy",
+    select:"name profileImage.url status"
+  }]);
+
+  // const postsWithImages = await Promise.all(
+  //   allPosts.map(async (post) => {
+  //     const image = await imageModel.findById(post.imageId);
+  //     const user = await userModel
+  //       .findById(post.createdBy)
+  //       .select("name profileImage status");
+  //     return { ...post.toObject(), image, user };
+  //   })
+  // );
+
+  // return res.json({ success: true, results: postsWithImages });
+  return res.json({ success: true, results: allPosts });
 });
 
 // Get single post
 export const singlePost = asyncHandler(async (req, res, next) => {
-  const post = await postModel.findById(req.params.postId);
+  const post = await postModel.findById(req.params.postId).populate([
+    {
+      path:"createdBy",
+      select:"name profileImage.url"
+    },
+    {
+       path:"imageId",
+      select:"images.url"
+    }
+  ]);
   return res.json({ success: true, results: post });
 });
 
