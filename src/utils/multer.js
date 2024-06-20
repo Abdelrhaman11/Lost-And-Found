@@ -18,3 +18,5 @@ export const fileUpload = (filterArray) => {
     fileFilter,
   });
 };
+
+

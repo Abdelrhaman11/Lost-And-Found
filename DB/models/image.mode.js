@@ -10,6 +10,10 @@ export const imageSchema = new Schema({
     },
   ],
   postId: { type: Types.ObjectId, ref: "Post", required: true },
-});
+  createdBy: { type: Types.ObjectId, ref: "User", required: true },
+},
+{ timestamps: true }
+
+);
 
 export const imageModel = mongoose.model.Images || model("Image", imageSchema);
