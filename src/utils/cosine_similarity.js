@@ -13,6 +13,21 @@ export async function callCosineSimilarityEndpoint(vector1, vector2) {
   // Extract similarity score and result from response
   const { similarity_score, result } = response.data;
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    return { similarity_score, result };
+}
+
+export async function compare_faces(v1 , v2){
+    
+    const response=await axios.post("http://127.0.0.1:8000/compare_faces/" , {v1 , v2})
+    // console.log(response);
+    return {ress:"hiiiiiiiiii"};
+
+}      
+=======
+>>>>>>> 7ead1c4808c3e6caed363896f4a24c7cc119e316
   return { similarity_score, result };
 }
 
@@ -81,3 +96,7 @@ export async function compare_faces(v1, v2) {
         }
     }
 }
+<<<<<<< HEAD
+=======
+>>>>>>> b98f4b0be9dd7d98e5adb821b0a07b2ac7e4e7ab
+>>>>>>> 7ead1c4808c3e6caed363896f4a24c7cc119e316

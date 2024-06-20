@@ -46,7 +46,15 @@ export const appRouter = (app, express) => {
   app.use("/dar", darRouter);
 
   // Match-Image
+<<<<<<< HEAD
   app.use("/match", matchRouter);
+=======
+<<<<<<< HEAD
+  app.use("/match" ,matchRouter )
+=======
+  app.use("/match", matchRouter);
+>>>>>>> b98f4b0be9dd7d98e5adb821b0a07b2ac7e4e7ab
+>>>>>>> 7ead1c4808c3e6caed363896f4a24c7cc119e316
 
   app.use("*", (req, res, next) => {
     return res.json({ Message: "In-valid routing" });
