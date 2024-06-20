@@ -9,3 +9,11 @@ export async function callCosineSimilarityEndpoint(vector1, vector2) {
 
     return { similarity_score, result };
 }
+
+export async function compare_faces(v1 , v2){
+    
+    const response=await axios.post("http://127.0.0.1:8000/compare_faces/" , {v1 , v2})
+    // console.log(response);
+    return {ress:"hiiiiiiiiii"};
+
+}      
