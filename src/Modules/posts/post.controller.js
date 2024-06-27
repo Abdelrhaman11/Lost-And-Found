@@ -46,7 +46,7 @@ export const addPost = asyncHandler(async (req, res, next) => {
   }
 */
   // Create image document
-  const image = await imageModel.create({ images, postId: post._id });
+  const image = await imageModel.create({ images, postId: post._id , createdBy: req.user._id});
 
   // Add imagePost in postModel
   post = await postModel.findByIdAndUpdate(
