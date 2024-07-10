@@ -130,6 +130,7 @@ export const loginAdmin = asyncHandler(async (req, res, next) => {
   return res.json({ success: true, results: token });
 });
 
+
 // Send forget code
 export const sendForgetCode = asyncHandler(async (req, res, next) => {
   const { email } = req.body;

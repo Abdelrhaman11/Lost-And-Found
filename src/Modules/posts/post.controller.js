@@ -124,7 +124,9 @@ export const deletePost = asyncHandler(async (req, res, next) => {
   if (req.user._id.toString() != post.createdBy.toString())
     return next(new Error("Not authorized !", { cause: 401 }));
 
-  const imagesArr = post.images;
+
+  const imagess= await imageModel.findOne({postId:post._id})
+  const imagesArr = imagess.images;
   const ids = imagesArr.map((imageObj) => imageObj.id);
 
   // ids.push(post.postImages.id);////////////////////////////
@@ -138,6 +140,7 @@ export const deletePost = asyncHandler(async (req, res, next) => {
   );
 
   // Delete post from DB
+  await imageModel.findByIdAndDelete(imagess._id);
   await postModel.findByIdAndDelete(req.params.postId);
 
   //send response
@@ -156,23 +159,21 @@ export const updatePostData = asyncHandler(async (req, res, next) => {
   }
 
   // Update post data
+
   post.firstName = req.body.firstName ? req.body.firstName : post.firstName;
   post.lastName = req.body.lastName ? req.body.lastName : post.lastName;
   post.gender = req.body.gender ? req.body.gender : post.gender;
   post.age = req.body.age ? req.body.age : post.age;
-  post.recentLocation = req.body.recentLocation
-    ? req.body.recentLocation
-    : post.recentLocation;
+  post.recentLocation = req.body.recentLocation? req.body.recentLocation:post.recentLocation;
   post.type = req.body.type ? req.body.type : post.type;
   post.notes = req.body.notes ? req.body.notes : post.notes;
   post.hair_type = req.body.hair_type ? req.body.hair_type : post.hair_type;
   post.hair_color = req.body.hair_color ? req.body.hair_color : post.hair_color;
   post.skin_color = req.body.skin_color ? req.body.skin_color : post.skin_color;
-  post.height_relative_to_his_peers = req.body.height_relative_to_his_peers
-    ? req.body.height_relative_to_his_peers
-    : post.height_relative_to_his_peers;
-
+  post.height_relative_to_his_peers = req.body.height_relative_to_his_peers? req.body.height_relative_to_his_peers:post.height_relative_to_his_peers;
+  
   await post.save();
+
 
   return res.status(201).json({
     success: true,
@@ -181,11 +182,18 @@ export const updatePostData = asyncHandler(async (req, res, next) => {
   });
 });
 
+
+
 // Update Images post
 export const updatePostImages = asyncHandler(async (req, res, next) => {
   const post = await postModel.findById(req.params.postId);
 
   if (!post) return next(new Error("Post not found!"));
+
+  const imagess= await imageModel.findOne({postId:post._id})
+
+
+  if (!imagess) return next(new Error("Images not found!"));
 
   // Check owner
   if (req.user._id.toString() !== post.createdBy.toString()) {
@@ -193,31 +201,43 @@ export const updatePostImages = asyncHandler(async (req, res, next) => {
   }
 
   // Delete old images
-  for (const oldImage of post.images) {
-    await cloudinary.uploader.destroy(oldImage.id);
-  }
+  // for (let oldImage of imagess.images) {
+  //   await cloudinary.uploader.destroy(oldImage.id);
+
+  // }
+  const arrImages=imagess.images
+  const ids= arrImages.map((image)=>{
+    return image.id
+  })
+
+  console.log(ids);
+
+  await cloudinary.api.delete_resources(ids)
 
   // Upload new images
 
   const images = [];
+  if (!req.files)
+    return next(new Error("Person images are required !", { cause: 400 }));
 
   for (const file of req.files.postImages) {
     const { secure_url, public_id } = await cloudinary.uploader.upload(
       file.path,
       {
         folder: `${process.env.FOLDER_CLOUD_NAME}/posts/${post.cloudFolder}`,
+        // public_id:imagess.images[0].id
       }
     );
     images.push({ id: public_id, url: secure_url });
   }
 
   // Update post with new images
-  post.images = images;
-  await post.save();
+  imagess.images = images;
+  await imagess.save();
 
   return res.status(201).json({
     success: true,
-    results: post,
+    results: imagess,
     message: "Images Updated successfully !",
   });
 });
